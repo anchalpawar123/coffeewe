@@ -600,7 +600,7 @@ footer{position:relative;z-index:10;background:var(--dark);border-top:1px solid 
     </div>
     <div class="coffee-grid" id="coffee-grid"></div>
   </section>
-</div></div>
+</div> 
 
 <!-- Coffee Modal -->
 <div class="c-modal-bg" id="modal-bg">
@@ -1053,17 +1053,16 @@ if(sc){for(let i=0;i<12;i++){const s=document.createElement('span');s.className=
 ══════════════════════════════════════════ */
  function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-
   document.getElementById('page-'+id).classList.add('active');
-
   document.querySelectorAll('.nav-menu a').forEach(a=>{
     a.classList.remove('active');
-
-    if(a.dataset.p===id)
-      a.classList.add('active');
+    if(a.dataset.p===id) a.classList.add('active');
   });
-
-  navMenu.classList.remove("active");
+  document.querySelector(".nav-menu").classList.remove("active");
+  
+  // ✅ YEH DO LINE ADD KAR
+  window.scrollTo(0, 0);
+  setTimeout(() => observeReveal(), 100);
 }
 document.querySelectorAll('.nav-menu a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();}));
 
@@ -1076,8 +1075,17 @@ window.addEventListener('scroll',()=>{document.getElementById('nav').classList.t
    REVEAL ON SCROLL
 ══════════════════════════════════════════ */
 function observeReveal(){
-  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});},{threshold:.1});
-  document.querySelectorAll('.rv:not(.vis),.rl:not(.vis),.rr:not(.vis)').forEach(el=>obs.observe(el));
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('vis');
+        obs.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.05}); // ✅ 0.1 se 0.05 kar diya — chhote elements bhi trigger honge
+
+  document.querySelectorAll('.rv:not(.vis), .rl:not(.vis), .rr:not(.vis)')
+    .forEach(el => obs.observe(el));
 }
 observeReveal();
 const hamburger = document.getElementById("hamburger");
