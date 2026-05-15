@@ -339,12 +339,63 @@ footer{position:relative;z-index:10;background:var(--dark);border-top:1px solid 
   .contact-section{grid-template-columns:1fr;}
   .brew-content.on{grid-template-columns:1fr;}
   .footer-grid{grid-template-columns:1fr 1fr;}
-  nav .nav-menu{display:none;}
+.nav-menu{
+  display:flex;
+}
   .feat-strip{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:500px){
   .feat-strip{grid-template-columns:1fr;}
   .footer-grid{grid-template-columns:1fr;}
+}
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+}
+
+.hamburger span{
+  width:25px;
+  height:3px;
+  background:var(--gold);
+  border-radius:10px;
+}
+
+@media(max-width:820px){
+
+  .hamburger{
+    display:flex;
+  }
+
+  .nav-menu{
+    position:fixed;
+    top:0;
+    right:-100%;
+    width:250px;
+    height:100vh;
+    background:#111;
+
+    flex-direction:column;
+    padding:100px 30px;
+    gap:20px;
+
+    transition:.4s;
+  }
+
+  .nav-menu.active{
+    right:0;
+  }
+
+  .nav-menu li{
+    width:100%;
+  }
+
+  .nav-menu li a{
+    width:100%;
+    display:block;
+  }
+
 }
 </style>
 </head>
@@ -371,7 +422,16 @@ footer{position:relative;z-index:10;background:var(--dark);border-top:1px solid 
 
 <!-- ═══ NAV ═══ -->
 <nav id="nav">
-  <span class="nav-logo" onclick="showPage('home')">Dark Roast Café</span>
+  <span class="nav-logo" onclick="showPage('home')">
+    Dark Roast Café
+  </span>
+
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
   <ul class="nav-menu">
     <li><a href="#" onclick="showPage('home')" data-p="home" class="active">Home</a></li>
     <li><a href="#" onclick="showPage('coffee')" data-p="coffee">Coffee Types</a></li>
@@ -991,13 +1051,19 @@ if(sc){for(let i=0;i<12;i++){const s=document.createElement('span');s.className=
 /* ══════════════════════════════════════════
    PAGE NAVIGATION
 ══════════════════════════════════════════ */
-function showPage(id){
+ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+
   document.getElementById('page-'+id).classList.add('active');
-  document.querySelectorAll('.nav-menu a').forEach(a=>{a.classList.remove('active');if(a.dataset.p===id)a.classList.add('active');});
-  window.scrollTo({top:0,behavior:'smooth'});
-  setTimeout(observeReveal,100);
-  return false;
+
+  document.querySelectorAll('.nav-menu a').forEach(a=>{
+    a.classList.remove('active');
+
+    if(a.dataset.p===id)
+      a.classList.add('active');
+  });
+
+  navMenu.classList.remove("active");
 }
 document.querySelectorAll('.nav-menu a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();}));
 
@@ -1014,7 +1080,12 @@ function observeReveal(){
   document.querySelectorAll('.rv:not(.vis),.rl:not(.vis),.rr:not(.vis)').forEach(el=>obs.observe(el));
 }
 observeReveal();
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.querySelector(".nav-menu");
 
+hamburger.addEventListener("click", () => {
+  navMenu.classList.toggle("active");
+});
 /* ══════════════════════════════════════════
    COUNTER ANIMATION
 ══════════════════════════════════════════ */
